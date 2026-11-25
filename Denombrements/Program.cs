@@ -4,6 +4,11 @@ namespace Denombrements
 {
     class Program
     {
+        const int PERMUTATION = 1;
+        const int ARRANGEMENT = 2;
+        const int COMBINAISON = 3;
+        const int QUITTER = 0;
+        const int valeurMax = 20;
         static long ProduitSuite(int debut, int fin)
         {
             long resultat = 1;
@@ -13,45 +18,54 @@ namespace Denombrements
             }
             return resultat;
         }
+        static int Saisie(string message, int min, int max)
+        {
+            int reponse = 1;
+            do
+            {
+                try
+                {
+                    Console.Write(message + " --> ");
+                    reponse = int.Parse(Console.ReadLine());
+                    if (reponse < min || reponse > max)
+                    {
+                        Console.WriteLine("Erreur de saisie : choisissez un nombre supérieur ou égal à " + min + " et inférieur ou égal à " + max + ".");
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine("Erreur de saisie : choisissez un nombre.");
+                    reponse = min - 1;
+                }
+            } while (reponse < min || reponse > max);
+            return reponse;
+        }
         static void Main(string[] args)
         {
-            int c = 1;
-            while (c != 0)
+            int choix = 1;
+            while (choix != QUITTER)
             {
-                Console.WriteLine("Permutation ...................... 1");
-                Console.WriteLine("Arrangement ...................... 2");
-                Console.WriteLine("Combinaison ...................... 3");
-                Console.WriteLine("Quitter .......................... 0");
-                Console.Write("Choix :                            ");
-                c = int.Parse(Console.ReadLine());
-                if (c == 0)
+                Console.WriteLine("Permutation ...................... " + PERMUTATION);
+                Console.WriteLine("Arrangement ...................... " + ARRANGEMENT);
+                Console.WriteLine("Combinaison ...................... " + COMBINAISON);
+                Console.WriteLine("Quitter .......................... " + QUITTER);
+                choix = Saisie("Choix", QUITTER, COMBINAISON);
+                if (choix == PERMUTATION)
                 {
-                    Environment.Exit(0);
-                }
-                if (c == 1)
-                {
-                    Console.Write("nombre total d'éléments à gérer = ");
-                    int n = int.Parse(Console.ReadLine());
+                    int n = Saisie("nombre total d'éléments à gérer", 0, valeurMax);
                     Console.WriteLine(n + "! = " + (ProduitSuite(1, n)));
                 }
-                else
+                else if (choix == ARRANGEMENT)
                 {
-                    if (c == 2)
-                    {
-                        Console.Write("nombre total d'éléments à gérer = ");
-                        int t = int.Parse(Console.ReadLine());
-                        Console.Write("nombre d'éléments dans le sous ensemble = ");
-                        int n = int.Parse(Console.ReadLine());
-                        Console.WriteLine("A(" + t + "/" + n + ") = " + (ProduitSuite(t - n + 1, t)));
-                    }
-                    else
-                    {
-                        Console.Write("nombre total d'éléments à gérer = ");
-                        int t = int.Parse(Console.ReadLine());
-                        Console.Write("nombre d'éléments dans le sous ensemble = ");
-                        int n = int.Parse(Console.ReadLine());
-                        Console.WriteLine("C(" + t + "/" + n + ") = " + ((ProduitSuite(t - n + 1, t))) / (ProduitSuite(1, n)));
-                    }
+                    int t = Saisie("nombre total d'éléments à gérer", 0, valeurMax);
+                    int n = Saisie("nombre d'éléments dans le sous ensemble", 0, t);
+                    Console.WriteLine("A(" + t + "/" + n + ") = " + (ProduitSuite(t - n + 1, t)));
+                }
+                else if (choix == COMBINAISON)
+                {
+                    int t = Saisie("nombre total d'éléments à gérer", 0, valeurMax);
+                    int n = Saisie("nombre d'éléments dans le sous ensemble", 0, t);
+                    Console.WriteLine("C(" + t + "/" + n + ") = " + (ProduitSuite(t - n + 1, t) / ProduitSuite(1, n)));
                 }
             }
             Console.ReadLine();
