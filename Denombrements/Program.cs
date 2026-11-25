@@ -8,7 +8,7 @@ namespace Denombrements
         const int ARRANGEMENT = 2;
         const int COMBINAISON = 3;
         const int QUITTER = 0;
-        const int valeurMax = 20;
+        const int VALEUR_MAX = 20;
         static long ProduitSuite(int debut, int fin)
         {
             long resultat = 1;
@@ -52,20 +52,20 @@ namespace Denombrements
                 choix = Saisie("Choix", QUITTER, COMBINAISON);
                 if (choix == PERMUTATION)
                 {
-                    int n = Saisie("nombre total d'éléments à gérer", 0, valeurMax);
-                    Console.WriteLine(n + "! = " + (ProduitSuite(1, n)));
+                    int nbElements = Saisie("nombre total d'éléments à gérer", 0, valeurMax);
+                    Console.WriteLine(nbElements + "! = " + (ProduitSuite(1, nbElements)));
                 }
                 else if (choix == ARRANGEMENT)
                 {
-                    int t = Saisie("nombre total d'éléments à gérer", 0, valeurMax);
-                    int n = Saisie("nombre d'éléments dans le sous ensemble", 0, t);
-                    Console.WriteLine("A(" + t + "/" + n + ") = " + (ProduitSuite(t - n + 1, t)));
+                    int nbElements = Saisie("nombre total d'éléments à gérer", 0, valeurMax);
+                    int sousEnsemble = Saisie("nombre d'éléments dans le sous ensemble", 0, nbElements);
+                    Console.WriteLine("A(" + nbElements + "/" + sousEnsemble + ") = " + (ProduitSuite(nbElements - sousEnsemble + 1, nbElements)));
                 }
                 else if (choix == COMBINAISON)
                 {
-                    int t = Saisie("nombre total d'éléments à gérer", 0, valeurMax);
-                    int n = Saisie("nombre d'éléments dans le sous ensemble", 0, t);
-                    Console.WriteLine("C(" + t + "/" + n + ") = " + (ProduitSuite(t - n + 1, t) / ProduitSuite(1, n)));
+                    int nbElements = Saisie("nombre total d'éléments à gérer", 0, valeurMax);
+                    int sousEnsemble = Saisie("nombre d'éléments dans le sous ensemble", 0, nbElements);
+                    Console.WriteLine("C(" + nbElements + "/" + sousEnsemble + ") = " + (ProduitSuite(nbElements - sousEnsemble + 1, nbElements) / ProduitSuite(1, sousEnsemble)));
                 }
             }
             Console.ReadLine();
