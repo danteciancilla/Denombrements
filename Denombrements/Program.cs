@@ -1,70 +1,100 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Denombrements
 {
+    /// <summary>
+    /// Application de calculs de dénombrement : permutation, arrangement et combinaison.
+    /// </summary>
     class Program
     {
+        // valeurs des choix du menu
+        const int PERMUTATION = 1;
+        const int ARRANGEMENT = 2;
+        const int COMBINAISON = 3;
+        const int QUITTER = 0;
+        // valeur maximale autorisée pour le nombre total d'éléments
+        const int VALEUR_MAX = 20;
+
+        /// <summary>
+        /// Calcule le produit des entiers consécutifs de debut à fin (exemple : de 4 à 6, 4 * 5 * 6).
+        /// </summary>
+        /// <param name="debut">premier entier de la suite</param>
+        /// <param name="fin">dernier entier de la suite</param>
+        /// <returns>produit des entiers de debut à fin (1 si debut est supérieur à fin)</returns>
+        static long ProduitSuite(int debut, int fin)
+        {
+            long resultat = 1;
+            for (int k = debut; k <= fin; k++)
+            {
+                resultat *= k;
+            }
+            return resultat;
+        }
+
+        /// <summary>
+        /// Saisie d'un entier avec contrôle : redemande la saisie, avec un message d'erreur,
+        /// tant que la valeur n'est pas un nombre ou qu'elle est hors des limites.
+        /// </summary>
+        /// <param name="message">question affichée à l'utilisateur</param>
+        /// <param name="min">valeur minimale acceptée</param>
+        /// <param name="max">valeur maximale acceptée</param>
+        /// <returns>entier saisi, compris entre min et max</returns>
+        static int Saisie(string message, int min, int max)
+        {
+            int reponse = 1;
+            do
+            {
+                try
+                {
+                    Console.Write(message + " --> ");
+                    reponse = int.Parse(Console.ReadLine());
+                    if (reponse < min || reponse > max)
+                    {
+                        Console.WriteLine("Erreur de saisie : choisissez un nombre supérieur ou égal à " + min + " et inférieur ou égal à " + max + ".");
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine("Erreur de saisie : choisissez un nombre.");
+                    reponse = min - 1;
+                }
+            } while (reponse < min || reponse > max);
+            return reponse;
+        }
+
+        /// <summary>
+        /// Programme principal : affiche le menu, puis réalise le calcul choisi
+        /// (permutation, arrangement ou combinaison) jusqu'à ce que l'utilisateur quitte.
+        /// </summary>
+        /// <param name="args">arguments de la ligne de commande (non utilisés)</param>
         static void Main(string[] args)
         {
-            int c = 1;
-            while (c != 0)
+            int choix = 1;
+            while (choix != QUITTER)
             {
-                Console.WriteLine("Permutation ...................... 1");
-                Console.WriteLine("Arrangement ...................... 2");
-                Console.WriteLine("Combinaison ...................... 3");
-                Console.WriteLine("Quitter .......................... 0");
-                Console.Write("Choix :                            ");
-                c = int.Parse(Console.ReadLine());
-
-                if (c == 0) { Environment.Exit(0); }
-
-                if (c == 1)
+                // affichage du menu et saisie du choix
+                Console.WriteLine("Permutation ...................... " + PERMUTATION);
+                Console.WriteLine("Arrangement ...................... " + ARRANGEMENT);
+                Console.WriteLine("Combinaison ...................... " + COMBINAISON);
+                Console.WriteLine("Quitter .......................... " + QUITTER);
+                choix = Saisie("Choix", QUITTER, COMBINAISON);
+                // saisie des valeurs et calcul selon le choix
+                if (choix == PERMUTATION)
                 {
-                    Console.Write("nombre total d'éléments à gérer = "); // le nombre d'éléments à gérer
-                    int n = int.Parse(Console.ReadLine()); // saisir le nombre
-                                                           // calcul de r
-                    long r = 1;
-                    for (int k = 1; k <= n; k++)
-                        r *= k;
-                    Console.WriteLine(n + "! = " + r);
+                    int nbElements = Saisie("nombre total d'éléments à gérer", 0, VALEUR_MAX);
+                    Console.WriteLine(nbElements + "! = " + ProduitSuite(1, nbElements));
                 }
-                else
+                else if (choix == ARRANGEMENT)
                 {
-                    if (c == 2)
-                    {
-                        Console.Write("nombre total d'éléments à gérer = "); // le nombre d'éléments à gérer
-                        int t = int.Parse(Console.ReadLine()); // saisir le nombre
-                        Console.Write("nombre d'éléments dans le sous ensemble = "); // le sous ensemble
-                        int n = int.Parse(Console.ReadLine()); // saisir le nombre
-                        // calcul de r
-                        long r = 1;
-                        for (int k = (t - n + 1); k <= t; k++)
-                            r *= k;
-                        //Console.WriteLine("résultat = " + (r1 / r2));
-                        Console.WriteLine("A(" + t + "/" + n + ") = " + r);
-                    }
-                    else
-                    {
-                        Console.Write("nombre total d'éléments à gérer = "); // le nombre d'éléments à gérer
-                        int t = int.Parse(Console.ReadLine()); // saisir le nombre
-                        Console.Write("nombre d'éléments dans le sous ensemble = "); // le sous ensemble
-                        int n = int.Parse(Console.ReadLine()); // saisir le nombre
-                        // calcul de r1
-                        long r1 = 1;
-                        for (int k = (t - n + 1); k <= t; k++)
-                            r1 *= k;
-                        // calcul de r2
-                        long r2 = 1;
-                        for (int k = 1; k <= n; k++)
-                            r2 *= k;
-                        // calcul de r3
-                        //Console.WriteLine("résultat = " + (r1 / r2));
-                        Console.WriteLine("C(" + t + "/" + n + ") = " + (r1 / r2));
-                    }
+                    int nbElements = Saisie("nombre total d'éléments à gérer", 0, VALEUR_MAX);
+                    int sousEnsemble = Saisie("nombre d'éléments dans le sous ensemble", 0, nbElements);
+                    Console.WriteLine("A(" + nbElements + "/" + sousEnsemble + ") = " + ProduitSuite(nbElements - sousEnsemble + 1, nbElements));
+                }
+                else if (choix == COMBINAISON)
+                {
+                    int nbElements = Saisie("nombre total d'éléments à gérer", 0, VALEUR_MAX);
+                    int sousEnsemble = Saisie("nombre d'éléments dans le sous ensemble", 0, nbElements);
+                    Console.WriteLine("C(" + nbElements + "/" + sousEnsemble + ") = " + (ProduitSuite(nbElements - sousEnsemble + 1, nbElements) / ProduitSuite(1, sousEnsemble)));
                 }
             }
             Console.ReadLine();
